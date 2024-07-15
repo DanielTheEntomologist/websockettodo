@@ -31,7 +31,7 @@ const io = new Socket(server);
 
 io.on("connection", (socket) => {
   console.log("New client! Its id – " + socket.id);
-  socket.broadcast.emit("updateTasks", tasks);
+  socket.broadcast.emit("updateData", tasks);
 
   socket.on("removeTask", (taskId) => {
     const index = tasks.find((task) => {
@@ -39,10 +39,10 @@ io.on("connection", (socket) => {
     });
     tasks.splice(index, 1);
 
-    socket.broadcast.emit("updateTasks", tasks);
+    socket.broadcast.emit("updateData", tasks);
   });
   socket.on("addTask", (task) => {
     tasks.push(task);
-    socket.broadcast.emit("updateTasks", tasks);
+    socket.broadcast.emit("updateData", tasks);
   });
 });
