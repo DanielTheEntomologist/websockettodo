@@ -9,7 +9,7 @@ import websocket from "../../websocket.js";
 import { nanoid } from "nanoid";
 
 const Column = ({ title, icon, id }) => {
-  const [socket, setSocket] = useState(websocket);
+  const [socket] = useState(websocket);
   const columnId = 1;
   const [cards, setCards] = useState([]);
 
@@ -50,6 +50,14 @@ const Column = ({ title, icon, id }) => {
     socket.emit("removeCard", cardId);
   };
 
+  const editCard = (id, title) => {
+    console.log("editCard", id, title);
+    socket.emit("updateCard", {
+      id: id,
+      title: title,
+    });
+  };
+
   const element = (
     <article className={styles.column}>
       <h1 className={styles.title}>
@@ -63,7 +71,10 @@ const Column = ({ title, icon, id }) => {
             id={card.id}
             title={card.title}
             isFavorite={card.isFavorite}
-            removeCard={() => removeCard(card.id)}
+            removeCard={(id) => removeCard(id)}
+            editCard={(id, title) => {
+              editCard(id, title);
+            }}
           />
         ))}
       </ul>
