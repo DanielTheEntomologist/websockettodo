@@ -4,14 +4,10 @@ import TextInput from "../TextInput/TextInput.js";
 import Button from "../Button/Button.js";
 
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { addCard } from "../../redux/cardsRedux.js";
 
 const CardForm = function ({ columnId, onSubmit }) {
-  const defaultTitle = "New Card";
+  const defaultTitle = "New Task";
   const [title, setTitle] = useState(defaultTitle);
-
-  // const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();

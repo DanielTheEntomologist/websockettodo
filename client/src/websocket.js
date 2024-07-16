@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 // "undefined" means the URL will be computed from the `window.location` object
 const URL =
-  process.env.NODE_ENV === "production" ? undefined : "http://localhost:8000";
+  process.env.NODE_ENV === "production" ? undefined : "ws://localhost:8000";
 
 class LoudSocket extends io {
   static registry = new FinalizationRegistry((id) => {
@@ -19,9 +19,9 @@ class LoudSocket extends io {
   }
 }
 
-const socket = new LoudSocket("ws://localhost:8000", {
-  transports: ["websocket"],
-  autoConnect: false,
-});
+// const socket = new LoudSocket("ws://localhost:8000", {
+//   transports: ["websocket"],
+//   autoConnect: false,
+// });
 
-export default socket;
+export default LoudSocket;

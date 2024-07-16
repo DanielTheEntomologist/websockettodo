@@ -30,7 +30,7 @@ const Card = (props) => {
 
   const editingHandler = () => {
     if (editing) {
-      props.editCard(props.id, title);
+      props.editCard(props.id, props.columnId, title, props.isFavorite);
     }
     setEditing(!editing);
   };

@@ -4,16 +4,26 @@ import { useState, useEffect } from "react";
 
 import Card from "../Card/Card.js";
 import CardForm from "../CardForm/CardForm.js";
-import websocket from "../../websocket.js";
+import LoudSocket from "../../websocket.js";
 
 import { nanoid } from "nanoid";
 
 const Column = ({ title, icon, id }) => {
-  const [socket] = useState(websocket);
+  const [socket, setSocket] = useState();
   const columnId = 1;
   const [cards, setCards] = useState([]);
 
+  const forceUpdate = () => {
+    setForceUpdateCounter((prevCounter) => prevCounter + 1);
+  };
+
   useEffect(() => {
+    const socket = new LoudSocket("ws://localhost:8000", {
+      transports: ["websocket"],
+      autoConnect: false,
+    });
+    setSocket(socket);
+
     socket.connect();
     socket.on("connect", () => {
       console.log("connected");
@@ -24,7 +34,7 @@ const Column = ({ title, icon, id }) => {
 
     socket.on("updateCards", (data) => {
       console.log("updateCards", data);
-      setCards(data);
+      setCards([...data]);
     });
 
     return () => {
@@ -42,6 +52,7 @@ const Column = ({ title, icon, id }) => {
       columnId: columnId,
       title: title,
       isFavorite: false,
+      checksum: nanoid(), // this is a hack to force update
     });
   };
 
@@ -50,11 +61,14 @@ const Column = ({ title, icon, id }) => {
     socket.emit("removeCard", cardId);
   };
 
-  const editCard = (id, title) => {
-    console.log("editCard", id, title);
+  const editCard = (id, columnId, title, isFavorite) => {
+    console.log("editCard", id, columnId, title, isFavorite);
     socket.emit("updateCard", {
-      id: id,
-      title: title,
+      id,
+      columnId,
+      title,
+      isFavorite,
+      checksum: nanoid(), // this is a hack to force update
     });
   };
 
@@ -67,13 +81,14 @@ const Column = ({ title, icon, id }) => {
       <ul className={styles.cards}>
         {cards.map((card) => (
           <Card
-            key={card.id}
+            key={card.checksum}
             id={card.id}
             title={card.title}
+            columnId={card.columnId}
             isFavorite={card.isFavorite}
             removeCard={(id) => removeCard(id)}
-            editCard={(id, title) => {
-              editCard(id, title);
+            editCard={(id, columnId, title, isFavorite) => {
+              editCard(id, columnId, title, isFavorite);
             }}
           />
         ))}
