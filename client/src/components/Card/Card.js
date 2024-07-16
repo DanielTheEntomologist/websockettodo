@@ -21,7 +21,7 @@ const Card = (props) => {
   const editingElement = editing ? (
     <TextInput
       type="text"
-      placeholder={title}
+      value={title}
       onChange={(e) => setTitle(e.target.value)}
     />
   ) : (
@@ -41,7 +41,7 @@ const Card = (props) => {
       <div className={styles.controls}>
         <button
           onClick={() => editingHandler()}
-          className={`fa fa-pencil`}
+          className={`fa ` + (editing ? `fa-check` : `fa-pencil`)}
         ></button>
         {/* <button
           onClick={toggleFavorite}
