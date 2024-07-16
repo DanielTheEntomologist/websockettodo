@@ -7,7 +7,7 @@ import { useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { addCard } from "../../redux/cardsRedux.js";
 
-const CardForm = function ({ columnId }) {
+const CardForm = function ({ columnId, onSubmit }) {
   const defaultTitle = "New Card";
   const [title, setTitle] = useState(defaultTitle);
 
@@ -15,8 +15,7 @@ const CardForm = function ({ columnId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // dispatch(addCard(columnId, title));
-    console.log("add card", columnId, title);
+    onSubmit(columnId, title);
     setTitle(defaultTitle);
     e.target.reset();
   };

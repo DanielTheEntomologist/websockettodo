@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import LoudSocket from "./websocket";
+console.log("socket imported into TestComp");
 
 const WebSocketComponent = () => {
-  //   const [socket, setSocket] = useState(
-  //     io({ autoConnect: false, transports: ["websocket"] })
-  //   );
-
-  //   useEffect(() => {
-  //     // Establish WebSocket connection
-  //     socket.connect("ws://localhost:8000");
-
-  //     // Emit an event immediately after establishing the connection
-  //     socket.on("connect", () => {
-  //       console.log("Connected to WebSocket server");
-  //       socket.emit("hello", { data: "Hello, server!" });
-  //     });
-
-  //     // Cleanup on component unmount
-  //     return () => socket.disconnect();
-  //   }, []);
-
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const socket = io("ws://localhost:8000", { transports: ["websocket"] });
+    const socket = new LoudSocket("ws://localhost:8000", {
+      transports: ["websocket"],
+      autoConnect: false,
+    });
     setSocket(socket);
-    socket.emit("hello", "world", (data) => {
-      console.log(data);
+
+    socket.connect();
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+
+    socket.on("echo", (data) => {
+      console.log("echo", data);
     });
 
     return () => {
       socket.disconnect();
+      socket.removeAllListeners();
     };
   }, []);
 
@@ -39,9 +35,8 @@ const WebSocketComponent = () => {
       WebSocket Component
       <button
         onClick={() => {
-          console.log("emitting hello");
-          socket.emit("hello", "world", (data) => {
-            console.log(data);
+          socket.emit("hello", "hello world", (response) => {
+            console.log(response); // ok
           });
         }}
       >
