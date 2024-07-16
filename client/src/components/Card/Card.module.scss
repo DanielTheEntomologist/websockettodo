@@ -27,7 +27,7 @@
     button {
       color: $color-dark;
       background-color: $color-light;
-      padding: $base-size / 2;
+      padding: calc($base-size / 2);
       border: none;
       border-radius: $radius;
       cursor: pointer;

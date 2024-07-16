@@ -4,14 +4,15 @@ import { useState, useEffect } from "react";
 
 import Button from "../Button/Button.js";
 
-const ConnectionSwitch = () => {
+const ConnectionSwitch = (props) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   const toggleConnect = () => {
+    console.log("toggleConnect");
     if (isConnected) {
-      socket.disconnect();
+      props.socket.disconnect();
     } else {
-      socket.connect();
+      props.socket.connect();
     }
     setIsConnected(!isConnected);
   };
